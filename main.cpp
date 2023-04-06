@@ -12,13 +12,8 @@ int main() {
     Lista<string> listaAluno;
     criaLista(listaAluno);
 
-
-
     Lista<string> listaDisciplinas;
     criaLista(listaDisciplinas);
-
-
-
 
 
 
@@ -27,11 +22,12 @@ int main() {
         cout<<("Reorganizaco da malha aerea do pais")<<endl;
         cout<<endl;
         cout<<"1. - Insercao de aluno:"<<endl;
-        cout<<"2. - Inserção de disciplina de um aluno:"<<endl;
+        cout<<"2. - Insercao de disciplina de um aluno:"<<endl;
         cout<<"3. - retirar um aluno:"<<endl;
         cout<<"4. - retirar disciplina de um aluno:"<<endl;
         cout<<"5. - mostrar todos os alunos e suas disciplinas:"<<endl;
         cout<<"6. - mostrar um aluno e suas disciplinas:"<<endl;
+        cout<<"7. - mostrar LISTAS:"<<endl;
         cout<<"-1. - Sair"<<endl;
         cout<<"Opcao: ";
         cin>>op;
@@ -58,7 +54,8 @@ int main() {
             getline(cin,disciplina);
 
             associaAlunoDisciplina(listaDeListas,{nome},{disciplina});
-
+            insereElem(listaDisciplinas,{disciplina});
+            insereLista(listaDisciplinas ,listaDeListas);
 
             break;
         case 3:
@@ -82,6 +79,9 @@ int main() {
             cin.ignore();
             cout<<"====Mostra TODOS os alunos e suas Disciplinas===="<<endl;
             alunosEDisciplina(listaDeListas);
+
+            cout<<"====Conta Cardinalidade===="<<endl;
+            cout<<listaAluno.cardinalidade;
         break;
 
         case 6:
@@ -94,6 +94,12 @@ int main() {
 
 
         break;
+        case 7:
+            mostraLista(listaAluno);
+            imprimir(listaDeListas);
+
+
+        break;
 
         case -1:
             exit(1);
@@ -103,12 +109,6 @@ int main() {
 
     resp = outraOp();
     }while(resp == 'S');
-
-
-
-
-
-
 
 return 0;
 }
