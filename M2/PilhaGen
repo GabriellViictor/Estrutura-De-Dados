@@ -1,0 +1,32 @@
+#ifndef PILHA_GEN_H_INCLUDED
+#define PILHA_GEN_H_INCLUDED
+
+ using namespace std;
+
+
+template<typename T, int MAX>
+struct PilhaEstaticaGen{
+    int cardinalidade;
+    T   elemento [MAX]; 
+};
+
+template<typename T, int MAX>
+void cria(PilhaEstaticaGen<T,MAX> &pilha){
+    pilha.cardinalidade = 0;
+}
+
+void retira(PilhaEstaticaGen<T,MAX> &pilha){
+    if(pilha.cardinalidade == 0){
+        throw "Underflow";
+    }
+    pilha.cardinalidade--;
+}
+
+
+void destruir(PilhaEstaticaGen<T,MAX> &pilha){
+    delete pilha;
+}
+
+
+
+#endif
