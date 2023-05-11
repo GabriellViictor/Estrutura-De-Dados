@@ -1,8 +1,8 @@
 #include <iostream>
-#include <string>
-#include <cstdlib> // atoi, atof
-#include <cctype>  // isdigit
 #include "PilhaDinamica.h"
+#include <cstdlib>
+#include <cctype>
+#include <string>
 #include <functional>
 
 using namespace std;
@@ -22,44 +22,58 @@ char outraOp()
 string comandoEmCaps(string comando)
 {
     string c = "";
-    for (int i=0 ; i< comando.length() ; i++)
+    for (unsigned int i=0 ; i< comando.length() ; i++)
     {
         c += toupper(comando[i]);
     }
     return c;
 }
 
-
-float pegaValor(string comando)
+float pegaFloat(string comando)
 {
-    int posIni = 0, posFim = 0;
-    string numStr = "";
-    bool validada;
-    unsigned int i, ponto;
+    int  primParent = comando.find("(") , segParent = comando.find(")");
+    string strNum ;
+    bool flag = true;
+    unsigned int i, pnt = 0;
 
+    strNum = comando.substr(primParent + 1, segParent - primParent - 1);
 
-    posIni = comando.find("(");
-    posFim = comando.find(")");
-    numStr = comando.substr(posIni+1, posFim-posIni-1);
-    validada = true;
-    ponto = 0;
-    if (numStr == "")
-        validada = false;
-    else if (!isdigit(numStr.at(0)) && numStr.at(0) == '-')
-        validada = false;
+    if (strNum.empty())
+    {
+        flag = false;
+    }
+    else if (!isdigit(strNum[0]) && strNum[0] != '-')
+    {
+        flag = false;
+    }
     else
-        for (i = 1; i < numStr.length(); i++)
-            if (!isdigit(numStr.at(i)))
+    {
+        for (i = 1; i < strNum.length(); i++)
+        {
+            if (!isdigit(strNum[i]))
             {
-                if (isdigit(numStr.at(i - 1)) && numStr.at(i) == '.' && ponto == 0)
-                    ponto++;
+                if (isdigit(strNum[i - 1]) && strNum[i] == '.' && pnt == 0)
+                {
+                    pnt++;
+                }
                 else
-                    validada = false;
+                {
+                    flag = false;
+                }
             }
-    if (!validada)
+        }
+    }
+
+    if (!flag)
+    {
         return -1;
-    return stoi(numStr);
+    }
+
+    return stof(strNum);
 }
+
+
+
 
 
 
@@ -67,25 +81,28 @@ int main()
 {
     PilhaDinamicaGen<float> pilha;
     string comando = "";
-    float valor,valor_aux = 0.0;
-    cria(pilha);
-    bool inicializa = false;
+    float valor;
     char resp;
+    bool inicializa = false;
 
 
 
-        cout << "Editor de expressao aritmetica" << endl;\
 
-        cout << "\nINICIO:              |Inicializa o programa" << endl;
-        cout << "ZERA:                |Reinicia a expressao" << endl;
-        cout << "SOMA(valor):         |SOMA com o valor da expressao" << endl;
-        cout << "SUBTRAI(valor):      |SUBTRAI com o valor da expressao" << endl;
-        cout << "MULTIPLICA(valor):   |MULTIPLICA com o valor da expressao" << endl;
-        cout << "DIVIDE(valor):       |DIVIDE com o valor da expressao" << endl;
-        cout << "PARCELAS:            |Exibe os valores de cada parcela da expressao aritmetica" <<endl;
-        cout << "IGUAL:               |Exibe o resultado da avaliacao da expressao aritmetica "<<endl;
-        cout << "FIM:                 |Finaliza a execucao"<<endl;
-        cout<<"\nCOMANDO(x) OU COMANDO DIRETO PARA RESULTADOS" <<endl;
+    cout << "----------------------CALCULADORA DE EXPRESSOES----------------------" << endl;
+
+
+    cout << "\nINICIO:              |Inicializa o programa" << endl;
+    cout << "ZERA:                |Reinicia a expressao" << endl;
+    cout << "SOMA(valor):         |SOMA com o valor da expressao" << endl;
+    cout << "SUBTRAI(valor):      |SUBTRAI com o valor da expressao" << endl;
+    cout << "MULTIPLICA(valor):   |MULTIPLICA com o valor da expressao" << endl;
+    cout << "DIVIDE(valor):       |DIVIDE com o valor da expressao" << endl;
+    cout << "PARCELAS:            |Exibe os valores de cada parcela da expressao aritmetica" <<endl;
+    cout << "IGUAL:               |Exibe o resultado da avaliacao da expressao aritmetica "<<endl;
+    cout << "FIM:                 |Finaliza a execucao"<<endl;
+    cout<<"------------------------------------------------------------------------------------"<<endl;
+
+    cout<<"\nCOMANDO(x) OU COMANDO DIRETO PARA RESULTADOS" <<endl;
     do
     {
         cout<<endl<<"->";
@@ -95,7 +112,6 @@ int main()
 
         if(comando == "FIM" )
         {
-            cin.ignore();
 
             resp = outraOp();
             if(resp == 'S')
@@ -104,11 +120,10 @@ int main()
         else if (comando.find("INICIO") != string::npos)
         {
 
-            if(ehVazia(pilha))
+            if(!inicializa)
             {
                 cria(pilha);
                 inicializa = true;
-                insere(pilha,0.0f);
                 cout<<"Pilha inicializada";
             }
             else
@@ -121,9 +136,9 @@ int main()
         {
             if(!ehVazia(pilha))
             {
+                inicializa = false;
                 destroi(pilha);
-                insere(pilha,0.0f);
-                cout<<"Expressao zerada";
+                cout<<"Expressao zerada, INICIE A EXPRESSAO NOVAMENTE";
             }
             else
                 cout<<"ERRO! PILHA JA ESTA VAZIA ";
@@ -135,9 +150,15 @@ int main()
             {
                 if (comando.find("(") != string::npos && comando.find(")")!= string::npos )
                 {
-                    valor = pegaValor(comando);
-                    if(valor != -1 && pilha.cardinalidade != 0)
-                        insere(pilha, valor+topo(pilha));
+                    valor = pegaFloat(comando);
+                    if(valor != -1 ){
+                        if (!ehVazia(pilha))
+                            insere(pilha, valor+topo(pilha));
+                        else
+                            insere(pilha, valor);
+                    }else
+                        cout << "ERRO! , VALOR NAO ACEITO"<< endl;
+
                 }
 
             }
@@ -150,10 +171,13 @@ int main()
             {
                 if (comando.find("(") != string::npos && comando.find(")")!= string::npos )
                 {
-                    valor = pegaValor(comando);
-                    if(valor != -1)
+                    valor = pegaFloat(comando);
+                    if(valor != -1 && !ehVazia(pilha) != 0)
                         insere(pilha, topo(pilha)- valor);
-                }
+                    else if(valor != -1)
+                        insere(pilha, valor*-1);
+                }else
+                    cout << "ERRO! , VALOR NAO ACEITO"<< endl;
             }
             else
                 cout << "Programa nao iniciado"<<endl;
@@ -166,14 +190,19 @@ int main()
             {
                 if (comando.find("(") != string::npos && comando.find(")")!= string::npos )
                 {
-                    valor = pegaValor(comando);
-                    if(valor != -1)
-                        insere(pilha, topo(pilha) * valor);
+                    valor = pegaFloat(comando);
+                    if(valor != -1 ){
+                        if (!ehVazia(pilha))
+                            insere(pilha, valor * topo(pilha));
+                        else
+                            insere(pilha, valor);
+                    }else
+                        cout << "ERRO! , VALOR NAO ACEITO"<< endl;
                 }
-                else
-                    cout << "Programa nao iniciado"<<endl;
 
             }
+            else
+                cout << "Programa nao iniciado"<<endl;
 
         }
         else if (comando.find("DIVIDE") != string::npos)
@@ -183,14 +212,20 @@ int main()
             {
                 if (comando.find("(") != string::npos && comando.find(")")!= string::npos )
                 {
-                    valor = pegaValor(comando);
-                    if(valor != -1)
-                        insere(pilha, topo(pilha) / valor);
-                }
-                else
-                    cout << "Programa nao iniciado"<<endl;
+                   valor = pegaFloat(comando);
+                    if(valor != -1 ){
+                        if (!ehVazia(pilha))
+                            insere(pilha, topo(pilha) / valor );
+                        else
+                            insere(pilha, valor);
+                    }else
+                        cout << "ERRO! , VALOR NAO ACEITO"<< endl;
+                }else{}
 
             }
+             else
+                cout << "Programa nao iniciado"<<endl;
+
         }
         else if (comando == "PARCELAS")
         {
@@ -202,7 +237,6 @@ int main()
         }
         else
         {
-            system("cls");
             cout<<"COMANDO INVALIDO DIGITE NOVAMENTE"<<endl;
 
         }

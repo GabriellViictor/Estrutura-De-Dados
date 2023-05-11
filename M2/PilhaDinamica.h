@@ -113,8 +113,7 @@ void mostra(PilhaDinamicaGen<T> pilha)
     Nodo<T>* p = pilha.fim;
     while (p != NULL)
     {
-        if(p->elemento != NULL)
-            cout << p->elemento << endl;
+        cout<< p->elemento <<" " ;
         p = p->prox;
     }
 }
