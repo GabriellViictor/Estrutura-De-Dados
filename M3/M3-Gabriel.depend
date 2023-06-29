@@ -1,0 +1,19 @@
+# depslib dependency file v1.0
+1688063840 source:c:\users\gabriel\desktop\m3-gabriel\main.cpp
+	<iostream>
+	<fstream>
+	<vector>
+	<algorithm>
+	<random>
+	<iomanip>
+	"metodosOrganizacao.h"
+	"Utils.h"
+
+1688065277 c:\users\gabriel\desktop\m3-gabriel\metodosorganizacao.h
+
+1688065291 c:\users\gabriel\desktop\m3-gabriel\utils.h
+	<iomanip>
+	<string>
+	<cstdlib>
+	<cstring>
+
